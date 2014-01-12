@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+    <style>
+        ul {
+            list-style-type: none;
+            padding: 0px;
+            margin: 0px;
+        }
+    </style>
+    
+    <head>
+        <script src="../node/libs/node_modules/socket.io/node_modules/socket.io-client/dist/socket.io.js"></script>
+        <script>
+            var socket = io.connect('127.0.0.1:8080'); //create a socket connection
+            console.log("testing");
+            var emails = new Array();
+            
+            var emailsID = new Array();
+            emailsID[0] = document.getElementById("Email1");
+
+            var numEmails = 4;
+            // On connection
+            socket.on('connect', function() {
+                console.log("connected");
+
+            });
+
+            //On message event (regular event)
+            socket.on('message', function(data) {
+            });
+
+            //On recieving new mail
+            socket.on('new-mail', function(data) {
+                emails.unshift(data);
+                if (emails.length > numEmails) {
+                    emails.pop();
+                }
+                for (var i=0; i<emails.length; i++) {
+                    console.log(emails[i].text);
+                }
+                document.getElementById("Email1").innerHTML = "Subject: " + emails[0].subject + " From: " + emails[0].from[0].address; 
+            });
+        </script>
+    </head>
+    
+    <body>
+        <ul>
+            <li id="Email1" style="emailBlock">Test 1</li>
+            <li id="Email2" style="emailBlock">Test 2</li>
+            <li id="Email3" style="emailBlock">Test 3</li>
+        </ul>
+    </body>
+
+</html>
